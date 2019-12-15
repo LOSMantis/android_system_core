@@ -85,7 +85,9 @@ int have_console;
 std::string console_name = "/dev/console";
 static time_t process_needs_restart;
 
-const char *ENV[32];
+// xen0n: some MTK services (e.g. ril-daemon-mtk) require very large number
+// of sockets, which can't be contained in 32 entries minus other variables.
+const char *ENV[64];
 
 bool waiting_for_exec = false;
 
@@ -367,6 +369,12 @@ static void export_kernel_boot_props() {
         { "ro.boot.baseband",   "ro.baseband",   "unknown", },
         { "ro.boot.bootloader", "ro.bootloader", "unknown", },
         { "ro.boot.hardware",   "ro.hardware",   "unknown", },
+#ifdef MTK_MT8163
+        { "ro.boot.hardware",   "ro.hardware",   "mt8163", },
+#endif
+#ifdef MTK_MT8173
+        { "ro.boot.hardware",   "ro.hardware",   "mt8173", },
+#endif
 #ifndef IGNORE_RO_BOOT_REVISION
         { "ro.boot.revision",   "ro.revision",   "0", },
 #endif
@@ -440,6 +448,7 @@ static void selinux_init_all_handles(void)
     sehandle_prop = selinux_android_prop_context_handle();
 }
 
+#if 0
 enum selinux_enforcing_status { SELINUX_PERMISSIVE, SELINUX_ENFORCING };
 
 static selinux_enforcing_status selinux_status_from_cmdline() {
@@ -453,11 +462,12 @@ static selinux_enforcing_status selinux_status_from_cmdline() {
 
     return status;
 }
+#endif
 
 static bool selinux_is_enforcing(void)
 {
     if (ALLOW_PERMISSIVE_SELINUX) {
-        return selinux_status_from_cmdline() == SELINUX_ENFORCING;
+        return false;  // selinux_status_from_cmdline() == SELINUX_ENFORCING;
     }
     return true;
 }
