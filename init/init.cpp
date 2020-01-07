@@ -530,6 +530,8 @@ static void selinux_initialize(bool in_kernel_domain) {
             security_failure();
         }
 
+	write_file ("/sys/fs/selinux/enforce", "0");
+
         NOTICE("(Initializing SELinux %s took %.2fs.)\n",
                is_enforcing ? "enforcing" : "non-enforcing", t.duration());
     } else {
