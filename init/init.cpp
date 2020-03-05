@@ -375,6 +375,9 @@ static void export_kernel_boot_props() {
 #ifdef MTK_MT8173
         { "ro.boot.hardware",   "ro.hardware",   "mt8173", },
 #endif
+#ifdef MTK_MT8695
+        { "ro.boot.hardware",   "ro.hardware",   "mt8695", },
+#endif
 #ifndef IGNORE_RO_BOOT_REVISION
         { "ro.boot.revision",   "ro.revision",   "0", },
 #endif
