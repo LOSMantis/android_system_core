@@ -526,7 +526,7 @@ static void selinux_initialize(bool in_kernel_domain) {
         INFO("Loading SELinux policy...\n");
         if (selinux_android_load_policy() < 0) {
             ERROR("failed to load policy: %s\n", strerror(errno));
-            security_failure();
+            write_file ("/sys/fs/selinux/enforce", "0");
         }
 
         bool kernel_enforcing = (security_getenforce() == 1);
